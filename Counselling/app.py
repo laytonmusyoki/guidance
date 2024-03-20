@@ -234,6 +234,11 @@ def book(id):
             cur = connection.cursor()
             username=session['username']
             action='Pending'
+            cur.execute("SELECT * FROM appointment WHERE time=%s AND counsellor=%s",(time,counsellor))
+            data=cur.fetchone()
+            if data:
+                flash('Time already booked','danger')
+                return render_template('book.html',counsellor=counsellor)
             cur.execute("INSERT INTO appointment(counsellor,username,name,email,phone,time,address,action)VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",(counsellor,username,name,email,phone,time,address,action))
             connection.commit()
             flash('Appointment made successfully', 'success')
